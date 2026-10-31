@@ -1,0 +1,44 @@
+#!/bin/sh
+# Restricted front end for `framework_tool --charge-limit`.
+#
+# Install it as /usr/local/bin/framework-charge-limit (root:root, 0755) and grant
+# only this script via sudoers. Keeping the allowed arguments in a script avoids
+# sudoers wildcards that would also match other framework_tool options, such as
+# --flash-ec.
+set -eu
+
+TOOL="${FRAMEWORK_TOOL:-/usr/bin/framework_tool}"
+
+if [ ! -x "$TOOL" ]; then
+	echo "framework_tool not found at $TOOL (override with FRAMEWORK_TOOL)" >&2
+	exit 1
+fi
+
+usage() {
+	echo "usage: $0 [--charge-limit [25-100]]" >&2
+	exit 2
+}
+
+case "$#" in
+0)
+	exec "$TOOL" --charge-limit
+	;;
+1)
+	[ "$1" = "--charge-limit" ] || usage
+	exec "$TOOL" --charge-limit
+	;;
+2)
+	[ "$1" = "--charge-limit" ] || usage
+	case "$2" in
+	'' | *[!0-9]*) echo "only whole percentages are accepted" >&2; exit 2 ;;
+	esac
+	if [ "$2" -lt 25 ] || [ "$2" -gt 100 ]; then
+		echo "limit must be between 25 and 100" >&2
+		exit 2
+	fi
+	exec "$TOOL" --charge-limit "$2"
+	;;
+*)
+	usage
+	;;
+esac

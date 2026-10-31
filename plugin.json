@@ -1,0 +1,17 @@
+{
+	"id": "frameworkChargeLimit",
+	"name": "Framework Charge Limit",
+	"description": "Set the battery charge limit of a Framework laptop from the bar and the Control Center",
+	"version": "0.1.0",
+	"license": "MIT",
+	"author": "tealk",
+	"repository": "https://github.com/tealk/framework-chargelimiter",
+	"icon": "battery_saver",
+	"type": "widget",
+	"component": "./FrameworkChargeLimitWidget.qml",
+	"settings": "./FrameworkChargeLimitSettings.qml",
+	"capabilities": ["dankbar-widget", "control-center"],
+	"requires_dms": ">=2.0.0",
+	"dependencies": ["framework_tool"],
+	"permissions": ["settings_read", "settings_write", "process"]
+}
